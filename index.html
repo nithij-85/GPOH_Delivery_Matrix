@@ -79,6 +79,14 @@
   .hstat-value.amber  { color: #fcd34d; }
   .hstat-value.purple { color: #c4b5fd; }
   .hstat-label { font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,0.58); text-transform: uppercase; letter-spacing: 0.55px; white-space: nowrap; }
+  .nav-link-gpdm {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.82); font-size: 11.5px; font-weight: 600;
+    padding: 6px 14px; border-radius: 8px; text-decoration: none;
+    transition: background 0.15s; white-space: nowrap;
+  }
+  .nav-link-gpdm:hover { background: rgba(255,255,255,0.17); color: #fff; }
 
   /* geo region pills in header */
   .header-geo { display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 12px 0 12px 20px; border-left: 1px solid rgba(255,255,255,0.12); margin-left: 8px; position: relative; z-index: 1; }
@@ -500,6 +508,7 @@
       <div class="hstat-value purple" id="stat-regions">&#8212;</div>
       <div class="hstat-label">REG_ID</div>
     </div>
+    <a class="nav-link-gpdm" href="GPDM_Location.html">&#128205; GPDM Location</a>
   </div>
 </div>
 <div class="filters-panel">
@@ -624,6 +633,7 @@
     </table>
   </div>
 </div>
+
 
 <!-- ── Audit Trail Drawer ── -->
 <div class="audit-overlay" id="audit-overlay" onclick="closeAudit(event)">
@@ -1149,7 +1159,8 @@ function updateCRBadge(){
 function switchTab(tab){
   ["data","crqueue"].forEach(function(t){
     document.getElementById("tab-"+t).classList.toggle("active",t===tab);
-    document.getElementById("panel-"+(t==="data"?"data":"crqueue")).classList.toggle("active",t===tab);
+    var panelId="panel-"+t;
+    document.getElementById(panelId).classList.toggle("active",t===tab);
   });
   if(tab==="crqueue")renderCRQueue();
 }
