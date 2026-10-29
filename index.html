@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -231,6 +231,9 @@
   .table-wrap::-webkit-scrollbar-thumb:hover { background: #64748b; }
   .table-wrap::-webkit-scrollbar-corner { background: #f1f5f9; }
   table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13px; box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.07); }
+  /* Frozen header: overflow:hidden makes the table its own scroll container and defeats sticky th; clip keeps rounded corners without that */
+  #data-table { overflow: clip; }
+  #panel-data .table-wrap { padding-top: 0; }
   thead tr { background: linear-gradient(90deg, #071e52 0%, #0f3583 45%, #1565c0 80%, #1976d2 100%); }
   thead th {
     position: sticky; top: 0; z-index: 2; padding: 11px 13px;
@@ -255,24 +258,6 @@
     color: #1d4ed8; font-variant-numeric: tabular-nums;
     background: linear-gradient(90deg,transparent,rgba(219,234,254,0.45));
   }
-  tbody td.cr-cell { padding: 4px 8px; min-width: 180px; max-width: 280px; white-space: normal; vertical-align: top; }
-  .cr-edit {
-    display: block; width: 100%; min-height: 28px; padding: 4px 7px;
-    font-size: 12px; font-family: inherit; color: #334155; line-height: 1.45;
-    border: 1.5px solid transparent; border-radius: 6px;
-    background: transparent; outline: none; resize: none; overflow: hidden;
-    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-    white-space: pre-wrap; word-break: break-word; cursor: text;
-  }
-  .cr-edit:hover { border-color: #cbd5e1; background: #f8faff; }
-  .cr-edit:focus { border-color: #f0a500; background: #fffbf0; box-shadow: 0 0 0 3px rgba(240,165,0,0.12); cursor: text; }
-  .cr-edit.has-note { border-color: #fde68a; background: #fffdf0; }
-  thead th.cr-th {
-    background: linear-gradient(90deg,#854d0e,#a16207) !important;
-    color: #fef9c3 !important; letter-spacing: 0.5px;
-    border-left: 2px solid rgba(240,165,0,0.4);
-  }
-  thead th.cr-th::after { content: " ✓"; font-size: 9px; opacity: 0.75; }
   .rank {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 28px; height: 20px;
@@ -307,13 +292,6 @@
   }
   .tab-btn:hover { color: #1a2340; }
   .tab-btn.active { color: #1a4f9c; border-bottom-color: #1a4f9c; }
-  .tab-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    background: #ef4444; color: #fff; font-size: 9.5px; font-weight: 800;
-    border-radius: 10px; padding: 1px 6px; min-width: 18px; line-height: 1.4;
-    transition: background 0.2s;
-  }
-  .tab-badge.zero { background: #cbd5e1; }
 
  /* â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢
      VIEW PANELS
@@ -321,117 +299,10 @@
   .view-panel { display: none; flex: 1; min-height: 0; flex-direction: column; }
   .view-panel.active { display: flex; }
 
- /* â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢
-     CR-QUEUE PANEL
-  â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢ */
-  .crq-wrap { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 28px 12px; }
-  .crq-wrap::-webkit-scrollbar { width: 6px; }
-  .crq-wrap::-webkit-scrollbar-track { background: #f1f5f9; }
-  .crq-wrap::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
-  .crq-empty { text-align: center; padding: 60px 20px; color: #94a3b8; }
-  .crq-empty .crq-empty-icon { font-size: 38px; margin-bottom: 10px; }
-  .crq-empty p { font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 4px; }
-  .crq-empty small { font-size: 12px; }
-  .crq-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px;
-    background: #fff; border-radius: 12px; overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.07); }
-  .crq-table thead tr { background: linear-gradient(90deg,#5b2d8e 0%,#7c3aed 50%,#8b5cf6 100%); }
-  .crq-table thead th {
-    padding: 10px 13px; text-align: left; font-weight: 700; font-size: 10px;
-    letter-spacing: 0.55px; color: rgba(255,255,255,0.92); white-space: nowrap;
-    text-transform: uppercase; border-right: 1px solid rgba(255,255,255,0.1);
-    position: sticky; top: 0; z-index: 2;
-    background: linear-gradient(90deg,#5b2d8e 0%,#7c3aed 50%,#8b5cf6 100%);
-  }
-  .crq-table thead th:last-child { border-right: none; }
-  .crq-table tbody tr:nth-child(odd)  { background: #fff; }
-  .crq-table tbody tr:nth-child(even) { background: #faf5ff; }
-  .crq-table tbody tr:hover { background: #ede9fe !important; }
-  .crq-table tbody td { padding: 8px 13px; border-bottom: 1px solid #ede9fe; color: #334155; white-space: nowrap; }
-  .crq-table tbody td.crq-note { white-space: pre-wrap; word-break: break-word; max-width: 300px; font-style: italic; color: #5b21b6; }
-  .crq-table tbody td.crq-actions { white-space: nowrap; }
-  .crq-status {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 2px 9px; border-radius: 20px; font-size: 10.5px; font-weight: 700; white-space: nowrap;
-  }
-  .crq-status.open    { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-  .crq-status.inprog  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
-  .crq-status.done    { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-  .crq-status.closed  { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
-  .crq-btn {
-    padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
-    cursor: pointer; border: 1px solid #e2e8f0; background: #f8faff; color: #475569;
-    transition: all 0.12s; margin-right: 4px;
-  }
-  .crq-btn:hover { background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; }
-  .crq-btn.danger:hover { background: #fee2e2; border-color: #fca5a5; color: #ef4444; }
-
- /* â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢
-     AUDIT TRAIL DRAWER
-  â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢ */
-  .audit-overlay {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35);
-    z-index: 500; backdrop-filter: blur(2px);
-  }
-  .audit-overlay.open { display: block; }
-  .audit-drawer {
-    position: fixed; top: 0; right: -480px; width: 460px; max-width: 94vw;
-    height: 100%; background: #fff; z-index: 501;
-    box-shadow: -6px 0 32px rgba(0,0,0,0.18);
-    display: flex; flex-direction: column;
-    transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
-  }
-  .audit-overlay.open .audit-drawer { right: 0; }
-  .audit-header {
-    padding: 18px 20px 14px;
-    background: linear-gradient(135deg,#5b2d8e,#7c3aed);
-    color: #fff; flex-shrink: 0;
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-  }
-  .audit-header-title { font-size: 14px; font-weight: 800; letter-spacing: 0.2px; }
-  .audit-header-sub { font-size: 11px; opacity: 0.75; margin-top: 3px; }
-  .audit-close {
-    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
-    color: #fff; border-radius: 7px; width: 28px; height: 28px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; cursor: pointer; flex-shrink: 0; transition: background 0.12s;
-  }
-  .audit-close:hover { background: rgba(255,255,255,0.3); }
-  .audit-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
-  .audit-body::-webkit-scrollbar { width: 5px; }
-  .audit-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-  .audit-empty { text-align: center; padding: 40px 16px; color: #94a3b8; font-size: 13px; }
-  .audit-entry {
-    position: relative; padding: 12px 14px 12px 36px; margin-bottom: 10px;
-    background: #f8faff; border: 1px solid #e8eef6; border-radius: 10px;
-    border-left: 3px solid #7c3aed;
-  }
-  .audit-entry::before {
-    content: ""; position: absolute; left: 14px; top: 17px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #7c3aed; border: 2px solid #fff;
-    box-shadow: 0 0 0 2px #7c3aed;
-  }
-  .audit-entry.first { border-left-color: #22c55e; }
-  .audit-entry.first::before { background: #22c55e; box-shadow: 0 0 0 2px #22c55e; }
-  .audit-ts { font-size: 10.5px; color: #94a3b8; font-weight: 600; margin-bottom: 3px; }
-  .audit-user { font-size: 11px; font-weight: 700; color: #5b21b6; }
-  .audit-note { font-size: 12.5px; color: #334155; margin-top: 5px; white-space: pre-wrap; word-break: break-word; background: #fff; border: 1px solid #ede9fe; border-radius: 6px; padding: 6px 9px; }
-  .audit-note.deleted { color: #94a3b8; text-decoration: line-through; font-style: italic; }
-  .audit-status-change { font-size: 11px; color: #64748b; margin-top: 4px; }
-  .audit-footer { padding: 12px 20px; border-top: 1px solid #e8eef6; flex-shrink: 0; background: #f8faff; }
-  .audit-status-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .audit-status-label { font-size: 11px; font-weight: 600; color: #475569; white-space: nowrap; }
-  .audit-status-btn {
-    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
-    cursor: pointer; border: 1.5px solid transparent; transition: all 0.12s;
-  }
-  .audit-status-btn.open    { background: #fef3c7; color: #92400e; border-color: #fde68a; }
-  .audit-status-btn.inprog  { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
-  .audit-status-btn.done    { background: #dcfce7; color: #166534; border-color: #86efac; }
-  .audit-status-btn.closed  { background: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
-  .audit-status-btn:hover { opacity: 0.75; }
-  .audit-status-btn.active-status { box-shadow: 0 0 0 3px rgba(124,58,237,0.25); }
+  .dmcr-wrap { padding: 28px; font-size: 14px; color: #334155; }
+  .dmcr-wrap p { margin-bottom: 10px; }
+  .dmcr-link { color: #1a4f9c; font-weight: 600; text-decoration: underline; word-break: break-all; }
+  .dmcr-link:hover { color: #0f3583; }
 
  /* â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢
      PAGINATION
@@ -809,7 +680,7 @@
 <!-- â€â‚¬â€â‚¬ Tab Bar â€â‚¬â€â‚¬ -->
 <div class="tab-bar">
   <button class="tab-btn active" id="tab-data" onclick="switchTab('data')">&#128202; Data Matrix</button>
-  <button class="tab-btn" id="tab-crqueue" onclick="switchTab('crqueue')">&#128203; CR-Queue <span class="tab-badge zero" id="crq-badge">0</span></button>
+  <button class="tab-btn" id="tab-dmcr" onclick="switchTab('dmcr')">&#128279; DM-Change Request</button>
 </div>
 
 <!-- â€â‚¬â€â‚¬ Data Matrix Panel â€â‚¬â€â‚¬ -->
@@ -833,7 +704,6 @@
         <th>#</th><th>ISO_CNTRY_COD</th><th>REG_ID</th><th>WHS_ID</th><th>DELIV_TYPE</th>
         <th class="num">NR_DAYS</th><th class="num">FIXED_TIME</th><th class="num">DELAY_MINS</th>
         <th class="num">EST_COST</th><th class="num">DIST_IN_KM</th><th class="num">CUTOFF_TIME</th><th>CUTOFF_TIMEZ</th>
-        <th class="cr-th">Change Request</th>
       </tr></thead>
       <tbody id="table-body"></tbody>
     </table>
@@ -846,45 +716,11 @@
   </div>
 </div>
 
-<!-- â€â‚¬â€â‚¬ CR-Queue Panel â€â‚¬â€â‚¬ -->
-<div class="view-panel" id="panel-crqueue">
-  <div class="crq-wrap" id="crq-wrap">
-    <div class="crq-empty" id="crq-empty">
-      <div class="crq-empty-icon">&#9989;</div>
-      <p>No Change Requests yet</p>
-      <small>Add a note in the Change Request column on any row to start tracking it here.</small>
-    </div>
-    <table class="crq-table" id="crq-table" style="display:none;">
-      <thead><tr>
-        <th>#</th><th>ISO</th><th>REG_ID</th><th>WHS_ID</th><th>Delivery Type</th>
-        <th>Change Request Note</th><th>Status</th><th>Last Updated</th><th>Actions</th>
-      </tr></thead>
-      <tbody id="crq-body"></tbody>
-    </table>
-  </div>
-</div>
-
-
-<!-- â€â‚¬â€â‚¬ Audit Trail Drawer â€â‚¬â€â‚¬ -->
-<div class="audit-overlay" id="audit-overlay" onclick="closeAudit(event)">
-  <div class="audit-drawer" id="audit-drawer">
-    <div class="audit-header">
-      <div>
-        <div class="audit-header-title">&#128196; Audit Trail</div>
-        <div class="audit-header-sub" id="audit-header-sub">Change history for this record</div>
-      </div>
-      <button class="audit-close" onclick="closeAudit()">&#10005;</button>
-    </div>
-    <div class="audit-body" id="audit-body"></div>
-    <div class="audit-footer">
-      <div class="audit-status-label" style="margin-bottom:7px;">Set Status:</div>
-      <div class="audit-status-row" id="audit-status-row">
-        <button class="audit-status-btn open"   onclick="setAuditStatus('open')">&#9899; Open</button>
-        <button class="audit-status-btn inprog" onclick="setAuditStatus('inprog')">&#9684; In Progress</button>
-        <button class="audit-status-btn done"   onclick="setAuditStatus('done')">&#10003; Done</button>
-        <button class="audit-status-btn closed" onclick="setAuditStatus('closed')">&#128274; Closed</button>
-      </div>
-    </div>
+<!-- DM-Change Request Panel -->
+<div class="view-panel" id="panel-dmcr">
+  <div class="dmcr-wrap">
+    <p>Submit and track Delivery Matrix change requests on the GPOH Delivery Matrix page:</p>
+    <a class="dmcr-link" href="https://w3.ibm.com/w3publisher/gpoh-delivery-matrix" target="_blank" rel="noopener noreferrer">https://w3.ibm.com/w3publisher/gpoh-delivery-matrix</a>
   </div>
 </div>
 </div><!-- /#pane-gpoh -->
@@ -1215,7 +1051,7 @@ function msItemToggle(wid,v,item){
   else{sel.add(v);item.classList.add("selected");if(cb)cb.checked=true;}
   msUpdateTrigger(wid);
   // cascade: country change refreshes downstream
-  if(wid==="ms-country"){activeGeoRegion=null;refreshDependentFilters();}
+  if(wid==="ms-country"){if(!sel.size&&activeGeoRegion){activeGeoRegion=null;msBuildList(wid,countryOptions());}refreshDependentFilters();}
   else if(wid==="ms-region"){refreshDependentFilters();}
   if(wid.startsWith("g-ms-")){gApplyFilters();}
   else {applyFilters();}
@@ -1245,7 +1081,7 @@ function msUpdateTrigger(wid){
 function msClear(wid){
   if(wid==="ms-country"){activeGeoRegion=null;}
   MS_STATE[wid].clear();
-  msBuildList(wid,msCurrentValues(wid));
+  msBuildList(wid,wid==="ms-country"?countryOptions():msCurrentValues(wid));
   msUpdateTrigger(wid);
   if(wid==="ms-country"||wid==="ms-region"){refreshDependentFilters();}
   if(wid.startsWith("g-ms-")){gApplyFilters();}
@@ -1295,6 +1131,12 @@ var GEO_REGION_COUNTRIES=(function(){
 
 // Track currently active geo-region pill selection
 var activeGeoRegion=null;
+// ISO country options for the dropdown: only the active region's countries present in the data, else all
+function countryOptions(){
+  if(!activeGeoRegion)return countries;
+  var inRegion=new Set(GEO_REGION_COUNTRIES[activeGeoRegion]||[]);
+  return countries.filter(function(c){return inRegion.has(c);});
+}
 
 function geoRegionClick(region){
   // Toggle: clicking the active region clears it
@@ -1309,8 +1151,8 @@ function geoRegionClick(region){
     var regionIsos=(GEO_REGION_COUNTRIES[region]||[]).filter(function(iso){return dataCountries.has(iso);});
     MS_STATE["ms-country"]=new Set(regionIsos);
   }
-  // Rebuild the country list UI to reflect the new selection
-  msBuildList("ms-country",countries);
+  // Rebuild the ISO country dropdown so it lists only the active region's countries (or all when none)
+  msBuildList("ms-country",countryOptions());
   refreshDependentFilters();
   applyFilters();
 }
@@ -1438,190 +1280,19 @@ function updateNextHoliday(selCountries){
   daysEl.textContent=daysText;
   pill.classList.add("visible");
 }
-/* â€â‚¬â€â‚¬ Change Request storage â€â‚¬â€â‚¬ */
-var CR_NOTES=(function(){try{return JSON.parse(localStorage.getItem("gpoh_cr_notes")||"{}");}catch(e){return{};}})();
-var CR_AUDIT=(function(){try{return JSON.parse(localStorage.getItem("gpoh_cr_audit")||"{}");}catch(e){return{};}})();
-var CR_STATUS=(function(){try{return JSON.parse(localStorage.getItem("gpoh_cr_status")||"{}");}catch(e){return{};}})();
-var CR_USER="User"; // display name â‚¬â€ update if identity is available
-
-function crRowKey(r){return[r.ISO_CNTRY_COD,r.REG_ID,r.WHS_ID,r.DELIV_TYPE].map(function(v){return v==null?"":String(v);}).join("|");}
-
-function crSave(key,val){
-  var prev=CR_NOTES[key]||"";
-  if(val===prev)return; // no change
-  var isDelete=!val;
-  if(val){CR_NOTES[key]=val;}else{delete CR_NOTES[key];}
-  // Audit log entry
-  if(!CR_AUDIT[key])CR_AUDIT[key]=[];
-  CR_AUDIT[key].unshift({ts:new Date().toISOString(),user:CR_USER,note:val,prev:prev});
-  // Auto-set status to Open on first note; remove status if note deleted
-  if(val&&!CR_STATUS[key]){CR_STATUS[key]="open";}
-  if(isDelete){delete CR_STATUS[key];}
-  try{
-    localStorage.setItem("gpoh_cr_notes",JSON.stringify(CR_NOTES));
-    localStorage.setItem("gpoh_cr_audit",JSON.stringify(CR_AUDIT));
-    localStorage.setItem("gpoh_cr_status",JSON.stringify(CR_STATUS));
-  }catch(e){}
-  updateCRBadge();
-  renderCRQueue();
-}
-
-function crStatusSave(key,status){
-  if(status){CR_STATUS[key]=status;}else{delete CR_STATUS[key];}
-  if(!CR_AUDIT[key])CR_AUDIT[key]=[];
-  CR_AUDIT[key].unshift({ts:new Date().toISOString(),user:CR_USER,statusChange:status});
-  try{
-    localStorage.setItem("gpoh_cr_status",JSON.stringify(CR_STATUS));
-    localStorage.setItem("gpoh_cr_audit",JSON.stringify(CR_AUDIT));
-  }catch(e){}
-  // When marked Done: clear the note so the record leaves the queue
-  if(status==="done"){
-    delete CR_NOTES[key];
-    delete CR_STATUS[key];
-    try{localStorage.setItem("gpoh_cr_notes",JSON.stringify(CR_NOTES));}catch(e){}
-    try{localStorage.setItem("gpoh_cr_status",JSON.stringify(CR_STATUS));}catch(e){}
-    // Close the audit drawer if it's open for this key
-    document.getElementById("audit-overlay").classList.remove("open");
-    auditActiveKey=null;
-    updateCRBadge();
-    renderCRQueue();
-    renderTable(); // refresh the data grid so the textarea clears too
-    return;
-  }
-  renderCRQueue();
-}
-
-function crAutoResize(ta){ta.style.height="auto";ta.style.height=(ta.scrollHeight)+"px";}
-
-/* â€â‚¬â€â‚¬ Badge counter â€â‚¬â€â‚¬ */
-function updateCRBadge(){
-  var n=Object.keys(CR_NOTES).length;
-  var badge=document.getElementById("crq-badge");
-  if(badge){badge.textContent=n;badge.classList.toggle("zero",n===0);}
-}
-
 /* â€â‚¬â€â‚¬ Tab switching â€â‚¬â€â‚¬ */
 function switchTab(tab){
-  ["data","crqueue"].forEach(function(t){
+  ["data","dmcr"].forEach(function(t){
     document.getElementById("tab-"+t).classList.toggle("active",t===tab);
     var panelId="panel-"+t;
     document.getElementById(panelId).classList.toggle("active",t===tab);
   });
-  if(tab==="crqueue")renderCRQueue();
-}
-
-/* â€â‚¬â€â‚¬ Status labels â€â‚¬â€â‚¬ */
-var STATUS_LABEL={open:"Open",inprog:"In Progress",done:"Done",closed:"Closed"};
-var STATUS_ICON={open:"ðŸŸ¡",inprog:"ðŸ”µ",done:"ðŸŸ¢",closed:"âš«"};
-
-/* â€â‚¬â€â‚¬ CR-Queue render â€â‚¬â€â‚¬ */
-function renderCRQueue(){
-  var keys=Object.keys(CR_NOTES);
-  var empty=document.getElementById("crq-empty");
-  var tbl=document.getElementById("crq-table");
-  var tbody=document.getElementById("crq-body");
-  if(!keys.length){empty.style.display="";tbl.style.display="none";return;}
-  empty.style.display="none";tbl.style.display="";
- // Build lookup: key â€ â€™ RAW_DATA row (first match)
-  var rowMap={};
-  RAW_DATA.forEach(function(r){var k=crRowKey(r);if(!rowMap[k])rowMap[k]=r;});
-  var html="";
-  keys.forEach(function(key,i){
-    var r=rowMap[key];
-    var note=CR_NOTES[key]||"";
-    var status=CR_STATUS[key]||"open";
-    var audit=CR_AUDIT[key]||[];
-    var lastTs=audit.length?audit[0].ts:"";
-    var lastFmt=lastTs?new Date(lastTs).toLocaleString():"-";
-    var parts=key.split("|");
-    var iso=parts[0]||"",reg=parts[1]||"",whs=parts[2]||"",dt=parts[3]||"";
-    html+="<tr>"+
-      "<td>"+(i+1)+"</td>"+
-      "<td>"+esc(iso)+"</td>"+
-      "<td>"+esc(reg)+"</td>"+
-      "<td>"+esc(whs)+"</td>"+
-      "<td><span class='chip chip-"+esc(dt)+"'>"+esc(dt)+"</span></td>"+
-      "<td class='crq-note'>"+esc(note)+"</td>"+
-      "<td><span class='crq-status "+esc(status)+"'>"+esc(STATUS_LABEL[status]||status)+"</span></td>"+
-      "<td>"+esc(lastFmt)+"</td>"+
-      "<td class='crq-actions'>"+
-        "<button class='crq-btn' onclick='openAudit(\""+esc(key)+"\")'>&#128196; History</button>"+
-        "<button class='crq-btn danger' onclick='crClearEntry(\""+esc(key)+"\")'>&#128465;</button>"+
-      "</td>"+
-      "</tr>";
-  });
-  tbody.innerHTML=html;
-}
-
-/* â€â‚¬â€â‚¬ Remove a CR entry (with audit) â€â‚¬â€â‚¬ */
-function crClearEntry(key){
-  if(!confirm("Remove this Change Request entry and its audit history?"))return;
-  delete CR_NOTES[key];delete CR_AUDIT[key];delete CR_STATUS[key];
-  try{
-    localStorage.setItem("gpoh_cr_notes",JSON.stringify(CR_NOTES));
-    localStorage.setItem("gpoh_cr_audit",JSON.stringify(CR_AUDIT));
-    localStorage.setItem("gpoh_cr_status",JSON.stringify(CR_STATUS));
-  }catch(e){}
-  updateCRBadge();renderCRQueue();renderTable();
-}
-
-/* â€â‚¬â€â‚¬ Audit Trail drawer â€â‚¬â€â‚¬ */
-var auditActiveKey=null;
-function openAudit(key){
-  auditActiveKey=key;
-  var overlay=document.getElementById("audit-overlay");
-  overlay.classList.add("open");
-  renderAuditTrail(key);
-  updateAuditStatusBtns(CR_STATUS[key]||"open");
-  // sub-header label
-  var parts=key.split("|");
-  document.getElementById("audit-header-sub").textContent=(parts[0]||"")+" | "+(parts[2]||"")+" | "+(parts[3]||"");
-}
-function closeAudit(e){
-  if(e&&e.target!==document.getElementById("audit-overlay"))return;
-  document.getElementById("audit-overlay").classList.remove("open");
-  auditActiveKey=null;
-}
-function renderAuditTrail(key){
-  var entries=CR_AUDIT[key]||[];
-  var body=document.getElementById("audit-body");
-  if(!entries.length){body.innerHTML="<div class='audit-empty'>No history yet.</div>";return;}
-  var html="";
-  entries.forEach(function(e,i){
-    var isFirst=i===entries.length-1;
-    var ts=e.ts?new Date(e.ts).toLocaleString():"";
-    html+="<div class='audit-entry"+(isFirst?" first":"")+"'>";
-    html+="<div class='audit-ts'>"+esc(ts)+"</div>";
-    html+="<div class='audit-user'>"+esc(e.user||"User")+"</div>";
-    if(e.statusChange!==undefined){
-      html+="<div class='audit-status-change'>Status changed to <strong>"+esc(STATUS_LABEL[e.statusChange]||e.statusChange)+"</strong></div>";
-    } else {
-      var isDeleted=!e.note&&e.prev;
-      html+="<div class='audit-note"+(isDeleted?" deleted":"")+"'>"+esc(isDeleted?e.prev:e.note)+"</div>";
-      if(isDeleted)html+="<div class='audit-status-change'>Note removed</div>";
-      else if(e.prev)html+="<div class='audit-status-change'>Updated from: <em>"+esc(e.prev.length>60?e.prev.slice(0,60)+"...":e.prev)+"</em></div>";
-    }
-    html+="</div>";
-  });
-  body.innerHTML=html;
-}
-function updateAuditStatusBtns(status){
-  document.querySelectorAll(".audit-status-btn").forEach(function(btn){
-    btn.classList.toggle("active-status",btn.classList.contains(status));
-  });
-}
-function setAuditStatus(status){
-  if(!auditActiveKey)return;
-  crStatusSave(auditActiveKey,status);
-  updateAuditStatusBtns(status);
-  renderAuditTrail(auditActiveKey);
 }
 
 // Initialise country list then cascades
 msBuildList("ms-country",countries);
 refreshDependentFilters();
 applyFilters();
-updateCRBadge();
 var PAGE_SIZE=100,currentPage=1,filteredData=[];
 function applyFilters(){
   var selCountries=msGetSelected("ms-country");
@@ -1643,7 +1314,7 @@ function resetFilters(){
   ["ms-country","ms-region","ms-whs","ms-delivtype"].forEach(function(wid){
     MS_STATE[wid].clear();
   });
-  msBuildList("ms-country",countries);
+  msBuildList("ms-country",countryOptions());
   refreshDependentFilters();
   applyFilters();
 }
@@ -1656,7 +1327,6 @@ function renderTable(){
   var start=(currentPage-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,filteredData.length),page=filteredData.slice(start,end),html="";
   for(var i=0;i<page.length;i++){
     var r=page[i],rank=start+i+1,chipClass="chip chip-"+r.DELIV_TYPE;
-    var crKey=crRowKey(r),crVal=CR_NOTES[crKey]||"",crClass="cr-edit"+(crVal?" has-note":"");
     html+="<tr>"+
       "<td><span class='rank'>"+rank+"</span></td>"+
       "<td>"+esc(r.ISO_CNTRY_COD)+"</td>"+
@@ -1670,12 +1340,9 @@ function renderTable(){
       "<td class='num'>"+esc(r.DIST_IN_KM)+"</td>"+
       "<td class='num'>"+esc(r.CUTOFF_TIME)+"</td>"+
       "<td>"+esc(r.CUTOFF_TIMEZ)+"</td>"+
-      "<td class='cr-cell'><textarea class='"+crClass+"' data-key='"+esc(crKey)+"' rows='1' placeholder='Add note...'>"+esc(crVal)+"</textarea></td>"+
       "</tr>";
   }
   tbody.innerHTML=html;
-  // auto-resize textareas to fit content
-  tbody.querySelectorAll(".cr-edit").forEach(function(ta){crAutoResize(ta);});
   renderPagination();
 }
 function renderPagination(){
@@ -1692,22 +1359,11 @@ function renderPagination(){
 }
 function goPage(p){var total=Math.ceil(filteredData.length/PAGE_SIZE);currentPage=Math.max(1,Math.min(total,p));renderTable();}
 
-// Save on blur, auto-resize on input
-document.getElementById("table-body").addEventListener("blur",function(e){
-  var ta=e.target;if(!ta.classList.contains("cr-edit"))return;
-  var val=ta.value.trim();crSave(ta.dataset.key,val);
-  ta.classList.toggle("has-note",!!val);
-},true);
-document.getElementById("table-body").addEventListener("input",function(e){
-  var ta=e.target;if(!ta.classList.contains("cr-edit"))return;
-  crAutoResize(ta);
-});
-
-var HEADERS=["ISO_CNTRY_COD","REG_ID","WHS_ID","DELIV_TYPE","NR_DAYS","FIXED_TIME","DELAY_MINS","EST_COST","DIST_IN_KM","CUTOFF_TIME","CUTOFF_TIMEZ","Change Request"];
+var HEADERS=["ISO_CNTRY_COD","REG_ID","WHS_ID","DELIV_TYPE","NR_DAYS","FIXED_TIME","DELAY_MINS","EST_COST","DIST_IN_KM","CUTOFF_TIME","CUTOFF_TIMEZ"];
 function csvCell(v){var s=(v===null||v===undefined)?"":String(v);if(s.indexOf(",")!==-1||s.indexOf('"')!==-1||s.indexOf("\n")!==-1){s='"'+s.replace(/"/g,'""')+'"';}return s;}
 function downloadCSV(){
   var rows=[HEADERS.join(",")];
-  for(var i=0;i<filteredData.length;i++){var r=filteredData[i];rows.push([r.ISO_CNTRY_COD,r.REG_ID,r.WHS_ID,r.DELIV_TYPE,r.NR_DAYS,r.FIXED_TIME,r.DELAY_MINS,r.EST_COST,r.DIST_IN_KM,r.CUTOFF_TIME,r.CUTOFF_TIMEZ,CR_NOTES[crRowKey(r)]||""].map(csvCell).join(","));}
+  for(var i=0;i<filteredData.length;i++){var r=filteredData[i];rows.push([r.ISO_CNTRY_COD,r.REG_ID,r.WHS_ID,r.DELIV_TYPE,r.NR_DAYS,r.FIXED_TIME,r.DELAY_MINS,r.EST_COST,r.DIST_IN_KM,r.CUTOFF_TIME,r.CUTOFF_TIMEZ].map(csvCell).join(","));}
   var blob=new Blob(["\uFEFF"+rows.join("\r\n")],{type:"text/csv;charset=utf-8;"});
   var url=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=url;a.download="GPOH_Delivery_Matrix.csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
@@ -1720,7 +1376,7 @@ function downloadXLS(){
   xml+='</Row>';
   var numCols={NR_DAYS:true,DELAY_MINS:true,EST_COST:true,DIST_IN_KM:true};
   for(var i=0;i<filteredData.length;i++){
-    var r=filteredData[i],vals=[r.ISO_CNTRY_COD,r.REG_ID,r.WHS_ID,r.DELIV_TYPE,r.NR_DAYS,r.FIXED_TIME,r.DELAY_MINS,r.EST_COST,r.DIST_IN_KM,r.CUTOFF_TIME,r.CUTOFF_TIMEZ,CR_NOTES[crRowKey(r)]||""];
+    var r=filteredData[i],vals=[r.ISO_CNTRY_COD,r.REG_ID,r.WHS_ID,r.DELIV_TYPE,r.NR_DAYS,r.FIXED_TIME,r.DELAY_MINS,r.EST_COST,r.DIST_IN_KM,r.CUTOFF_TIME,r.CUTOFF_TIMEZ];
     xml+='<Row>';
     for(var c=0;c<HEADERS.length;c++){var col=HEADERS[c],v=(vals[c]===null||vals[c]===undefined)?"":String(vals[c]),type=(numCols[col]&&v!==""&&!isNaN(Number(v)))?"Number":"String";xml+='<Cell><Data ss:Type="'+type+'">'+xlsEsc(v)+'</Data></Cell>';}
     xml+='</Row>';
