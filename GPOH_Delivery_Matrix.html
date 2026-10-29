@@ -299,10 +299,6 @@
   .view-panel { display: none; flex: 1; min-height: 0; flex-direction: column; }
   .view-panel.active { display: flex; }
 
-  .dmcr-wrap { padding: 28px; font-size: 14px; color: #334155; }
-  .dmcr-wrap p { margin-bottom: 10px; }
-  .dmcr-link { color: #1a4f9c; font-weight: 600; text-decoration: underline; word-break: break-all; }
-  .dmcr-link:hover { color: #0f3583; }
 
  /* â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢
      PAGINATION
@@ -506,6 +502,14 @@
 
  /* â”€â”€ Live Clock â”€â”€ */
   .header-right { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; padding: 0 4px 0 0; flex-shrink: 0; }
+  .btn-dmcr {
+    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    background: rgba(240,165,0,0.18); border: 1px solid rgba(240,165,0,0.55);
+    color: #fcd34d; font-size: 12px; font-weight: 700; letter-spacing: 0.3px;
+    padding: 8px 16px; border-radius: 8px; text-decoration: none; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-dmcr:hover { background: rgba(240,165,0,0.34); color: #fff; }
   .header-clock { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
   .header-clock-time { font-size: 19px; font-weight: 800; color: #fff; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; line-height: 1; }
   .header-clock-date { font-size: 10px; color: rgba(255,255,255,0.52); font-weight: 500; letter-spacing: 0.3px; white-space: nowrap; }
@@ -571,6 +575,7 @@
     </div>
   </div>
   <div class="header-right">
+    <a class="btn-dmcr" href="https://w3.ibm.com/w3publisher/gpoh-delivery-matrix" target="_blank" rel="noopener noreferrer">&#128279; DM Change Request</a>
   </div>
 </div>
 
@@ -679,8 +684,7 @@
 
 <!-- â€â‚¬â€â‚¬ Tab Bar â€â‚¬â€â‚¬ -->
 <div class="tab-bar">
-  <button class="tab-btn active" id="tab-data" onclick="switchTab('data')">&#128202; Data Matrix</button>
-  <button class="tab-btn" id="tab-dmcr" onclick="switchTab('dmcr')">&#128279; DM-Change Request</button>
+  <button class="tab-btn active" id="tab-data">&#128202; Data Matrix</button>
 </div>
 
 <!-- â€â‚¬â€â‚¬ Data Matrix Panel â€â‚¬â€â‚¬ -->
@@ -716,13 +720,6 @@
   </div>
 </div>
 
-<!-- DM-Change Request Panel -->
-<div class="view-panel" id="panel-dmcr">
-  <div class="dmcr-wrap">
-    <p>Submit and track Delivery Matrix change requests on the GPOH Delivery Matrix page:</p>
-    <a class="dmcr-link" href="https://w3.ibm.com/w3publisher/gpoh-delivery-matrix" target="_blank" rel="noopener noreferrer">https://w3.ibm.com/w3publisher/gpoh-delivery-matrix</a>
-  </div>
-</div>
 </div><!-- /#pane-gpoh -->
 
 <!-- â€â‚¬â€â‚¬ GPMD Location Pane â€â‚¬â€â‚¬ -->
@@ -1280,15 +1277,6 @@ function updateNextHoliday(selCountries){
   daysEl.textContent=daysText;
   pill.classList.add("visible");
 }
-/* â€â‚¬â€â‚¬ Tab switching â€â‚¬â€â‚¬ */
-function switchTab(tab){
-  ["data","dmcr"].forEach(function(t){
-    document.getElementById("tab-"+t).classList.toggle("active",t===tab);
-    var panelId="panel-"+t;
-    document.getElementById(panelId).classList.toggle("active",t===tab);
-  });
-}
-
 // Initialise country list then cascades
 msBuildList("ms-country",countries);
 refreshDependentFilters();
