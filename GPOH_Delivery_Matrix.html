@@ -502,14 +502,58 @@
 
  /* â”€â”€ Live Clock â”€â”€ */
   .header-right { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; padding: 0 4px 0 0; flex-shrink: 0; }
-  .btn-dmcr {
-    display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
-    background: rgba(240,165,0,0.18); border: 1px solid rgba(240,165,0,0.55);
-    color: #fcd34d; font-size: 12px; font-weight: 700; letter-spacing: 0.3px;
-    padding: 8px 16px; border-radius: 8px; text-decoration: none; cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+  /* DM Change Request: note + square button */
+  .dmcr-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 8px 0; }
+  .dmcr-note {
+    max-width: 210px; text-align: center; font-size: 10.5px; font-weight: 600; line-height: 1.35;
+    color: #fff; letter-spacing: 0.2px; text-shadow: 0 1px 4px rgba(0,0,0,0.35);
   }
-  .btn-dmcr:hover { background: rgba(240,165,0,0.34); color: #fff; }
+  .btn-dmcr {
+    --dmcr-size: 66px;
+    position: relative; overflow: hidden; isolation: isolate;
+    width: var(--dmcr-size); height: var(--dmcr-size); flex-shrink: 0;
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    padding: 6px; border-radius: 14px; text-align: center; text-decoration: none; cursor: pointer;
+    color: #3b2400; font-size: 9.5px; font-weight: 800; line-height: 1.15; letter-spacing: 0.3px;
+    background: linear-gradient(145deg, #ffd35a 0%, #f0a500 55%, #e07b00 100%);
+    border: 1px solid rgba(255,255,255,0.45);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.5);
+    transition: transform 0.22s cubic-bezier(.2,.8,.2,1), box-shadow 0.22s ease, filter 0.22s ease;
+    animation: dmcrPulse 2.8s ease-in-out infinite;
+  }
+  .btn-dmcr::before { /* light sweep on hover */
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%);
+    transform: translateX(-120%); transition: transform 0.55s ease;
+  }
+  .btn-dmcr .dmcr-ico { font-size: 22px; line-height: 1; transition: transform 0.25s cubic-bezier(.2,.8,.2,1); }
+  .btn-dmcr .dmcr-txt { display: block; }
+  .btn-dmcr:hover, .btn-dmcr:focus-visible {
+    transform: translateY(-4px) scale(1.07); filter: brightness(1.08); animation: none;
+    box-shadow: 0 10px 22px rgba(0,0,0,0.38), 0 0 0 3px rgba(255,211,90,0.45), 0 0 18px rgba(240,165,0,0.7);
+  }
+  .btn-dmcr:hover::before, .btn-dmcr:focus-visible::before { transform: translateX(120%); }
+  .btn-dmcr:hover .dmcr-ico, .btn-dmcr:focus-visible .dmcr-ico { transform: rotate(-12deg) scale(1.18); }
+  .btn-dmcr:active { transform: translateY(-1px) scale(0.98); }
+  .btn-dmcr:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  @keyframes dmcrPulse {
+    0%,100% { box-shadow: 0 4px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.5), 0 0 0 0 rgba(240,165,0,0.55); }
+    50%     { box-shadow: 0 4px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.5), 0 0 0 9px rgba(240,165,0,0); }
+  }
+  @media (max-width: 760px) {
+    .header { flex-wrap: wrap; }
+    .header-right { width: 100%; justify-content: center; padding: 0 0 8px; }
+    .dmcr-note { max-width: 260px; }
+  }
+  @media (max-width: 420px) {
+    .btn-dmcr { --dmcr-size: 58px; font-size: 9px; }
+    .btn-dmcr .dmcr-ico { font-size: 19px; }
+    .dmcr-note { font-size: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-dmcr { animation: none; transition: none; }
+    .btn-dmcr::before, .btn-dmcr .dmcr-ico { transition: none; }
+  }
   .header-clock { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
   .header-clock-time { font-size: 19px; font-weight: 800; color: #fff; letter-spacing: 0.5px; font-variant-numeric: tabular-nums; line-height: 1; }
   .header-clock-date { font-size: 10px; color: rgba(255,255,255,0.52); font-weight: 500; letter-spacing: 0.3px; white-space: nowrap; }
@@ -575,7 +619,10 @@
     </div>
   </div>
   <div class="header-right">
-    <a class="btn-dmcr" href="https://w3.ibm.com/w3publisher/gpoh-delivery-matrix" target="_blank" rel="noopener noreferrer">&#128279; DM Change Request</a>
+    <div class="dmcr-box">
+      <div class="dmcr-note" id="dmcr-note">Click here to submit a request to Create/Update Delivery Matrix.</div>
+      <a class="btn-dmcr" href="https://w3.ibm.com/w3publisher/gpoh-delivery-matrix" target="_blank" rel="noopener noreferrer" aria-describedby="dmcr-note"><span class="dmcr-ico">&#128279;</span><span class="dmcr-txt">DM Change Request</span></a>
+    </div>
   </div>
 </div>
 
