@@ -701,19 +701,9 @@
   </div>
 </div>
 
-<!-- â€â‚¬â€â‚¬ Tab Bar â€â‚¬â€â‚¬ -->
-<div class="tab-bar">
-  <button class="tab-btn active" id="tab-data">&#128202; Data Matrix</button>
-</div>
-
-<!-- â€â‚¬â€â‚¬ Data Matrix Panel â€â‚¬â€â‚¬ -->
+<!-- ──── Data Matrix Panel ──── -->
 <div class="view-panel active" id="panel-data">
   <div class="summary-bar">
-    <div class="summary-left">
-      <span class="rec-count-pill"><span class="dot"></span><strong id="row-count">0</strong> records</span>
-      <span class="sep">|</span>
-      <span class="badge">&#8593; EST_COST Low &#8594; High</span>
-    </div>
     <button class="btn-filter-toggle active" id="filter-toggle-btn" onclick="toggleFilters()">&#128269; Filters <span class="toggle-arrow">&#9660;</span></button>
     <div class="download-group">
       <span class="download-label">Download</span>
@@ -1328,7 +1318,7 @@ function resetFilters(){
 function esc(v){if(v===null||v===undefined)return"";return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function renderTable(){
   var tbody=document.getElementById("table-body"),empty=document.getElementById("empty-state"),table=document.getElementById("data-table"),rc=document.getElementById("row-count");
-  rc.textContent=filteredData.length.toLocaleString();
+  if(rc) rc.textContent=filteredData.length.toLocaleString();
   if(filteredData.length===0){table.style.display="none";empty.style.display="block";document.getElementById("pagination").innerHTML="";return;}
   table.style.display="";empty.style.display="none";
   var start=(currentPage-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,filteredData.length),page=filteredData.slice(start,end),html="";
