@@ -435,17 +435,17 @@
   .gpdm-dl-bar { display: none; } /* merged into filter bar */
 
   /* table */
-  .gpdm-tbl-wrap { flex: 1; min-height: 0; overflow: auto; padding: 12px 28px 8px; }
+  .gpdm-tbl-wrap { flex: 1; min-height: 0; overflow: auto; padding: 0 28px 8px; }
   .gpdm-tbl-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
   .gpdm-tbl-wrap::-webkit-scrollbar-track { background: #f1f5f9; }
   .gpdm-tbl-wrap::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
   .gpdm-table {
     width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12.5px;
-    white-space: nowrap; background: #fff; border-radius: 12px; overflow: hidden;
+    white-space: nowrap; background: #fff; border-radius: 12px; overflow: clip; /* clip (not hidden) keeps sticky header working */
     box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.07);
   }
-  .gpdm-table thead { position: sticky; top: 0; z-index: 10; }
   .gpdm-table thead th {
+    position: sticky; top: 0; z-index: 10;
     background: linear-gradient(90deg, #071e52 0%, #0f3583 45%, #1565c0 80%, #1976d2 100%);
     color: rgba(255,255,255,0.92); font-weight: 700;
     padding: 10px 12px; text-align: left;
